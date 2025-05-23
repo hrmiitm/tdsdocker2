@@ -1,0 +1,28 @@
+name: TDS DEMO YML TO CONTANERIZE AND PUSH TO DOCKERHUB
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Docker Login
+        uses: redhat-actions/podman-login@v1
+        with:
+          registry: docker.io
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Podman Image
+        run: pwd && ls -la && podman build -t docker.io/hrmhrmhrm/tdsdemo:latest .
+
+      - name: Image Upload to Dockerhub
+        run: podman push docker.io/hrmhrmhrm/tdsdemo:latest
+      
+      - name: Trigger Azure VM deployment
+        run: curl -X POST -d "token=${{ secrets.VM_WEBHOOK_SECRET }}" http://20.193.251.97:5000/webhook
