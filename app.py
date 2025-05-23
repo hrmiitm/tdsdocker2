@@ -7,7 +7,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///notes.db'
 app.config['SECRET_KEY'] = os.getenv('secret_key')
 db = SQLAlchemy()
 
-print(os.getenv('secret_key'))
+print('secret_key for database', os.getenv('secret_key'))
+print('xyz_key', os.getenv('xyz_key'))
 
 db.init_app(app) # connection between db and app
 app.app_context().push()
